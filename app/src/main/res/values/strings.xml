@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- General Messages -->
+    <string name="app_name">BaseProject</string>
+    <string name="text.loading">Loading…</string>
+
+    <!-- Error Api Messages -->
+    <string name="error.general">Sorry, something went wrong. Try again later or contact support.</string>
+    <string name="error.network">Seems that you don\'t have an Internet connection</string>
+    <string name="error.internal.server">Sorry, the server responded with an error. Try again later or contact support.</string>
+    <string name="error.parsing">There was an error while processing the response.</string>
+
+</resources>
