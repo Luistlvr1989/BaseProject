@@ -5,10 +5,9 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.support.annotation.VisibleForTesting
 import android.arch.persistence.db.SupportSQLiteDatabase
-import com.belatrixsf.baseproject.BaseProjectApplication
+import com.belatrixsf.baseproject.MvpLabKotlinApplication
 import com.belatrixsf.baseproject.BuildConfig
 import com.belatrixsf.baseproject.models.database.Address
-import com.belatrixsf.baseproject.models.database.User
 import com.belatrixsf.baseproject.models.database.dao.AddressDao
 
 @Database(entities = [
@@ -32,9 +31,9 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabaseType(): Builder<AppDatabase> {
             return if (DEBUG_DATABASE) {
-                Room.inMemoryDatabaseBuilder(BaseProjectApplication.context, AppDatabase::class.java)
+                Room.inMemoryDatabaseBuilder(MvpLabKotlinApplication.context, AppDatabase::class.java)
             } else {
-                Room.databaseBuilder(BaseProjectApplication.context, AppDatabase::class.java, DATABASE_NAME)
+                Room.databaseBuilder(MvpLabKotlinApplication.context, AppDatabase::class.java, DATABASE_NAME)
             }
         }
 

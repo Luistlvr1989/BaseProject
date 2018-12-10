@@ -3,7 +3,7 @@ package com.belatrixsf.baseproject.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.belatrixsf.baseproject.BaseProjectApplication
+import com.belatrixsf.baseproject.MvpLabKotlinApplication
 import com.belatrixsf.baseproject.R
 import com.belatrixsf.baseproject.extensions.addOrShow
 import com.belatrixsf.baseproject.extensions.hideIfAdded
@@ -16,7 +16,7 @@ class MainActivity : MainContract.View() {
         internal const val BUNDLE_TAG = "BUNDLE_TAG"
 
         fun newInstance(): Intent {
-            val intent =  Intent(BaseProjectApplication.context, MainActivity::class.java)
+            val intent =  Intent(MvpLabKotlinApplication.context, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             return intent
         }

@@ -16,7 +16,6 @@ object ApiClient : Serializable {
         return request.execute(endpoint)
                 .subscribeOn(Schedulers.io())
                 .onErrorResumeNext{ throwable: Throwable ->
-                    Timber.e(throwable)
                     Observable.error(throwable.fromApi())
                 }
                 .replay(1)

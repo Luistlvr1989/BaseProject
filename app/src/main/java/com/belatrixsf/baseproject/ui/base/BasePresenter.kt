@@ -3,11 +3,13 @@ package com.belatrixsf.baseproject.ui.base
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import com.belatrixsf.baseproject.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BasePresenter<Self: BasePresenter<Self, T>, T : BaseView<T, Self>> : Presenter<Self, T>, LifecycleObserver {
     private var view: T? = null
-    internal val disposable: CompositeDisposable by lazy {
+    private val disposable: CompositeDisposable by lazy {
         CompositeDisposable()
     }
 
@@ -26,6 +28,7 @@ abstract class BasePresenter<Self: BasePresenter<Self, T>, T : BaseView<T, Self>
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     override fun unsubscribe() {
+        // We dispose onStop because if we need to display an error, we need the view
         disposable.clear()
     }
 
@@ -34,4 +37,8 @@ abstract class BasePresenter<Self: BasePresenter<Self, T>, T : BaseView<T, Self>
     override fun getViewOrThrow() = getView() ?: throw IllegalStateException("view not attached")
 
     override fun isViewAttached() = view != null
+
+    fun Disposable.autoDispose() {
+        disposable += this
+    }
 }

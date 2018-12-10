@@ -10,6 +10,7 @@ import com.belatrixsf.baseproject.ui.base.BasePresenter
 interface SplashContract {
     abstract class View : BaseActivity<View, Presenter>() {
         internal abstract fun goToMain()
+        internal abstract fun goToLogin()
     }
 
     abstract class Presenter : BasePresenter<Presenter, View>()

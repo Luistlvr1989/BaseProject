@@ -29,6 +29,7 @@ abstract class BaseActivity<Self: BaseActivity<Self, T>, T : BasePresenter<T, Se
     override fun showError(error: String?) {
         MessageDialog.Builder(this)
                 .setMessage(error)
+                .setNegativeButton(android.R.string.cancel)
                 .show(supportFragmentManager)
     }
 
@@ -36,7 +37,5 @@ abstract class BaseActivity<Self: BaseActivity<Self, T>, T : BasePresenter<T, Se
         showError(getString(error))
     }
 
-    private fun getProgressDialog(): ProgressDialog? {
-        return progressDialog?: ProgressDialog.get(supportFragmentManager)
-    }
+    private fun getProgressDialog(): ProgressDialog? = progressDialog?:ProgressDialog.get(supportFragmentManager)
 }

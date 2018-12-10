@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.Serializable
 
 object AuthManager : Serializable {
-    private val listeners: MutableList<AuthStateListener> = ArrayList()
+    private val listeners = ArrayList<AuthStateListener>()
     var user: User? = PrefsHelper.getUser()
         private set(value) {
             field = value
@@ -19,8 +19,10 @@ object AuthManager : Serializable {
         }
 
     fun addAuthStateListener(listener: AuthStateListener) {
-        listeners.add(listener)
-        listener.onAuthStateChanged(user)
+        if (!listeners.contains(listener)) {
+            listeners.add(listener)
+            listener.onAuthStateChanged(user)
+        }
     }
 
     fun removeAuthStateListener(listener: AuthStateListener) {

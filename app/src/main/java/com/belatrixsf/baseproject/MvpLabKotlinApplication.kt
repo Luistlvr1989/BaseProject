@@ -5,17 +5,21 @@ import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.belatrixsf.baseproject.extensions.isFatal
+import com.belatrixsf.baseproject.extensions.isNonFatal
 import com.orhanobut.hawk.Hawk
 import com.squareup.leakcanary.LeakCanary
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 
 /**
  * Created by luis on 25/11/17.
  * Implements the application class
  */
-class BaseProjectApplication : Application() {
+class MvpLabKotlinApplication : Application() {
     companion object {
-        lateinit var context: BaseProjectApplication
+        lateinit var context: MvpLabKotlinApplication
     }
 
     override fun attachBaseContext(base: Context) {
@@ -26,22 +30,43 @@ class BaseProjectApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
+        initLeakCanary()
+        initLogger()
+        initSecureDatabase()
+        initRxErrorHandler()
+    }
 
+    private fun initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
         LeakCanary.install(this)
+    }
 
-        Hawk.init(this).build()
-
+    private fun initLogger() {
         if (BuildConfig.DEBUG) {
             Timber.plant(object : Timber.DebugTree() {
-                override fun createStackElementTag(element: StackTraceElement): String {
-                    return super.createStackElementTag(element) + ':' + element.lineNumber
+                override fun createStackElementTag(element: StackTraceElement): String? {
+                    return super.createStackElementTag(element) + "." + element.methodName + "(" + element.lineNumber + ")"
                 }
             })
         } else {
             Timber.plant(CrashReportingTree())
+        }
+    }
+
+    private fun initSecureDatabase() = Hawk.init(context).build()
+
+    private fun initRxErrorHandler() {
+        RxJavaPlugins.setErrorHandler { error ->
+            when {
+                error is UndeliverableException -> Timber.w(error.cause)
+                error.isNonFatal() -> Timber.w(error)
+                error.isFatal() -> Thread.currentThread().uncaughtExceptionHandler.uncaughtException(
+                        Thread.currentThread(),
+                        error
+                )
+            }
         }
     }
 
